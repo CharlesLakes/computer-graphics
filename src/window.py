@@ -9,7 +9,7 @@ class Window:
             print("Error: GLFW cannot init")
             sys.exit(1)
         
-        # Original window specs
+        # Guardar dimensiones originales de la ventana
         self.original_width = width
         self.original_height = height
         self.title = title
@@ -35,8 +35,35 @@ class Window:
         if key == glfw.KEY_F11 and action == glfw.PRESS:
             self.toggle_fullscreen()
     
+    def get_current_monitor(self):
+        """Obtener el monitor donde está actualmente la ventana"""
+        # Obtener posición de la ventana
+        win_x, win_y = glfw.get_window_pos(self.window)
+        win_width, win_height = glfw.get_window_size(self.window)
+        
+        # Calcular el centro de la ventana
+        win_center_x = win_x + win_width // 2
+        win_center_y = win_y + win_height // 2
+        
+        monitors = glfw.get_monitors()
+        
+        for monitor in monitors:
+            # Obtener posición y tamaño del monitor
+            mon_x, mon_y = glfw.get_monitor_pos(monitor)
+            video_mode = glfw.get_video_mode(monitor)
+            mon_width = int(video_mode.size.width)
+            mon_height = int(video_mode.size.height)
+            
+            # Verificar si el centro de la ventana está dentro de este monitor
+            if (mon_x <= win_center_x < mon_x + mon_width and
+                mon_y <= win_center_y < mon_y + mon_height):
+                return monitor
+        
+        # Si no se encuentra, usar el monitor primario como fallback
+        return glfw.get_primary_monitor()
+
     def toggle_fullscreen(self):
-        """Alternar entre modo ventana y pantalla completa"""
+        """Alternar entre modo ventana y pantalla completa en el monitor actual"""
         if self.is_fullscreen:
             # Cambiar a modo ventana
             glfw.set_window_monitor(
@@ -50,8 +77,8 @@ class Window:
             )
             self.is_fullscreen = False
         else:
-            # Cambiar a pantalla completa
-            monitor = glfw.get_primary_monitor()
+            # Cambiar a pantalla completa en el monitor actual
+            monitor = self.get_current_monitor()
             video_mode = glfw.get_video_mode(monitor)
             
             glfw.set_window_monitor(
@@ -82,5 +109,5 @@ class Window:
             glClear(GL_COLOR_BUFFER_BIT)
             face.draw()
             glfw.swap_buffers(self.window)
-         
+            
         glfw.terminate()
