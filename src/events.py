@@ -1,6 +1,8 @@
 import glfw
 
 # Handles user input events, such as keyboard and mouse.
+
+
 class InputHandler:
     def __init__(self, display_manager):
         """
@@ -22,7 +24,8 @@ class InputHandler:
         glfw.set_key_callback(self.display_manager.window, self._key_callback)
 
         # Set the cursor position callback
-        glfw.set_cursor_pos_callback(self.display_manager.window, self._cursor_callback)
+        glfw.set_cursor_pos_callback(
+            self.display_manager.window, self._cursor_callback)
 
     def _cursor_callback(self, window, xpos, ypos):
         """

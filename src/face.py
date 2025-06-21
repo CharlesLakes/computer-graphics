@@ -2,6 +2,8 @@ from PIL import Image
 from OpenGL.GL import *
 
 # Represents a 2D quadrilateral (four vertices) with an applied texture.
+
+
 class TexturedQuad:
     def __init__(self, texture_path, vertices):
         """
@@ -16,7 +18,8 @@ class TexturedQuad:
                                        top-right, top-left.
         """
         self.texture_id = self._load_texture(texture_path)
-        self.vertices = vertices # Expects 4 vertices, e.g., [(x1,y1), (x2,y2), (x3,y3), (x4,y4)]
+        # Expects 4 vertices, e.g., [(x1,y1), (x2,y2), (x3,y3), (x4,y4)]
+        self.vertices = vertices
 
         # Standard texture coordinates for a quad. These map the corners of the texture
         # to the vertices of the quad. The order here corresponds to a typical vertex order:
@@ -28,7 +31,6 @@ class TexturedQuad:
             (1.0, 1.0),  # Corresponds to vertices[2]
             (0.0, 1.0)   # Corresponds to vertices[3]
         ]
-
 
     def _load_texture(self, path):
         """
@@ -43,12 +45,13 @@ class TexturedQuad:
         try:
             # Open the image using Pillow, flip it vertically (OpenGL expects origin at bottom-left),
             # and convert to RGBA format.
-            image = Image.open(path).transpose(Image.FLIP_TOP_BOTTOM).convert("RGBA")
-            img_data = image.tobytes() # Get image data as bytes
+            image = Image.open(path).transpose(
+                Image.FLIP_TOP_BOTTOM).convert("RGBA")
+            img_data = image.tobytes()  # Get image data as bytes
         except FileNotFoundError:
             print(f"Error: Texture file not found at '{path}'")
             # Consider raising an exception or returning a default texture ID
-            return 0 # Or some indicator of failure
+            return 0  # Or some indicator of failure
 
         # Generate a new texture ID
         texture_id = glGenTextures(1)
@@ -67,7 +70,7 @@ class TexturedQuad:
             image.height,     # Height of the texture
             0,                # Border (must be 0)
             GL_RGBA,          # Format of the pixel data being supplied
-            GL_UNSIGNED_BYTE, # Data type of the pixel data
+            GL_UNSIGNED_BYTE,  # Data type of the pixel data
             img_data          # The image data itself
         )
 
@@ -79,7 +82,8 @@ class TexturedQuad:
         # Set texture filtering parameters.
         # GL_LINEAR_MIPMAP_LINEAR uses linear interpolation for minification across mipmap levels,
         # and linear interpolation within a mipmap level. This provides good quality.
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                        GL_LINEAR_MIPMAP_LINEAR)
         # GL_LINEAR uses linear interpolation for magnification.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
@@ -96,14 +100,15 @@ class TexturedQuad:
         Note: Immediate mode (glBegin/glEnd) is deprecated in modern OpenGL.
               For new projects, consider using Vertex Buffer Objects (VBOs) and shaders.
         """
-        if not self.texture_id: # Don't draw if texture loading failed
+        if not self.texture_id:  # Don't draw if texture loading failed
             return
 
         # Bind the quad's texture, making it active for the subsequent drawing commands.
         glBindTexture(GL_TEXTURE_2D, self.texture_id)
-        glEnable(GL_TEXTURE_2D) # Ensure texturing is enabled for this draw call
+        # Ensure texturing is enabled for this draw call
+        glEnable(GL_TEXTURE_2D)
 
-        glBegin(GL_POLYGON) # Begin drawing a polygon
+        glBegin(GL_POLYGON)  # Begin drawing a polygon
         for i in range(len(self.vertices)):
             # Get vertex coordinates (x, y)
             vertex_x, vertex_y = self.vertices[i]
@@ -114,7 +119,7 @@ class TexturedQuad:
             glTexCoord2f(tex_u, tex_v)
             # Specify the vertex position
             glVertex2f(vertex_x, vertex_y)
-        glEnd() # End drawing the polygon
+        glEnd()  # End drawing the polygon
 
-        glDisable(GL_TEXTURE_2D) # Disable texturing after drawing this quad
-        glBindTexture(GL_TEXTURE_2D, 0) # Unbind texture
+        glDisable(GL_TEXTURE_2D)  # Disable texturing after drawing this quad
+        glBindTexture(GL_TEXTURE_2D, 0)  # Unbind texture
