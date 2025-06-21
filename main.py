@@ -5,6 +5,7 @@
 from src.window import DisplayManager  # Renamed from Window
 from src.events import InputHandler    # Renamed from Events
 
+
 def main():
     """
     Main function to set up and run the application.
@@ -25,7 +26,7 @@ def main():
 
     # Set up the input callbacks
     # This connects GLFW's input events to our InputHandler's methods.
-    input_handler.setup_callbacks() # Renamed from events_setting()
+    input_handler.setup_callbacks()  # Renamed from events_setting()
 
     # Start the main application loop
     # This will handle rendering and event processing until the window is closed.

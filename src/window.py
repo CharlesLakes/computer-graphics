@@ -1,7 +1,7 @@
 import glfw
 from OpenGL.GL import *
 import sys
-from src.face import TexturedQuad # Updated import
+from src.face import TexturedQuad  # Updated import
 
 
 # Manages the display window, OpenGL context, and main event loop.
@@ -93,7 +93,8 @@ class DisplayManager:
                 100,   # Y position for windowed mode
                 self.original_width,
                 self.original_height,
-                0      # Refresh rate (0 for default/don't care in windowed mode)
+                # Refresh rate (0 for default/don't care in windowed mode)
+                0
             )
             self.is_fullscreen = False
             print("Switched to windowed mode.")
@@ -106,7 +107,8 @@ class DisplayManager:
 
             video_mode = glfw.get_video_mode(monitor)
             if not video_mode:
-                print(f"Error: Could not get video mode for monitor {monitor}.")
+                print(
+                    f"Error: Could not get video mode for monitor {monitor}.")
                 return
 
             glfw.set_window_monitor(
@@ -119,7 +121,8 @@ class DisplayManager:
                 int(video_mode.refresh_rate)
             )
             self.is_fullscreen = True
-            print(f"Switched to fullscreen mode on monitor: {glfw.get_monitor_name(monitor)}.")
+            print(
+                f"Switched to fullscreen mode on monitor: {glfw.get_monitor_name(monitor)}.")
 
     def run(self):
         """
