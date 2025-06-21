@@ -1,4 +1,8 @@
 from src.window import Window
 
-window = Window(800, 800, "My window")
-window.run()
+def main():
+    window = Window(800, 800, "My window")
+    window.run()
+
+if __name__ == "__main__":
+    main()
