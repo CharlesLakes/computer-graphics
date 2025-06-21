@@ -28,24 +28,6 @@ class Window:
             print("Error: window not make")
             sys.exit(1)
 
-        self.event_setting()
-
-    def event_setting(self):
-        # Set up key callback
-        glfw.set_key_callback(self.window, self.key_callback)
-
-        # Cursor position
-        glfw.set_cursor_pos_callback(self.window, self.cursor_callback)
-
-    def cursor_callback(self, window, xpos, ypos):
-        print("X:", xpos)
-        print("Y:", ypos)
-
-    def key_callback(self, window, key, scancode, action, mods):
-        """Callback to handle keyboard events"""
-        if key == glfw.KEY_F11 and action == glfw.PRESS:
-            self.toggle_fullscreen()
-
     def get_current_monitor(self):
         """Get the monitor where the window is currently located"""
         # Get window position
